@@ -25,11 +25,8 @@ jobs:
       - name: Install required Arduino libraries
         run: |
           platformio lib install "TFT_eSPI"
-          platformio lib install "ESP Async WebServer"
-          platformio lib install "ArduinoJson"
-          platformio lib install "FS"
-          platformio lib install "SPIFFS"
-          platformio lib install "WiFi"
+          platformio lib install "mathieucarbou/ESP Async WebServer@3.0.6"
+          platformio lib install "bblanchon/ArduinoJson"
 
       - name: Build firmware
         run: platformio run
