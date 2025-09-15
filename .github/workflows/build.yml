@@ -2,24 +2,40 @@ name: Build ESP32 Marauder
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: '3.11'
+
       - name: Install PlatformIO
         run: pip install platformio
+
+      - name: Install required Arduino libraries
+        run: |
+          platformio lib install "TFT_eSPI"
+          platformio lib install "ESP Async WebServer"
+          platformio lib install "ArduinoJson"
+          platformio lib install "FS"
+          platformio lib install "SPIFFS"
+          platformio lib install "WiFi"
+
       - name: Build firmware
-        run: pio run
-      - name: Upload artifact
+        run: platformio run
+
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: firmware
-          path: .pio/build/esp32dev/firmware.bin
+          name: esp32-marauder-firmware
+          path: .pio/build/**/firmware.bin
